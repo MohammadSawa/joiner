@@ -40,16 +40,6 @@ public class MemberService {
         }
     }
 
-    private void assertOwnerOrAdmin(Member member) {
-        User user = currentUser();
-        boolean isOwner = member.getUser() != null &&
-                member.getUser().getId().equals(user.getId());
-
-        if (user.getUserRole() != UserRole.ADMIN && !isOwner) {
-            throw new AccessDeniedException("user.unauthorized");
-        }
-    }
-
     public MemberResponse getMyProfile() {
         User user = currentUser();
 
@@ -104,7 +94,7 @@ public class MemberService {
 
 
     public Page<MemberResponse> list(int page, int size, String search) {
-        assertAdmin(); // Only admins may list all members
+        assertAdmin();
 
         Pageable pageable = PageRequest.of(page, size);
 
@@ -118,7 +108,6 @@ public class MemberService {
     public MemberResponse update(UUID id, MemberUpdateRequest request) {
         Member member = getEntity(id);
 
-        // Update only if provided (not null) and validated
         if (request.getFirstName() != null && !request.getFirstName().isBlank()) {
             member.setFirstName(request.getFirstName());
         }
@@ -166,7 +155,6 @@ public class MemberService {
             String membershipType,
             String persona
     ) {
-        // Authorization is already checked by @PreAuthorize on controller
 
         Pageable pageable = PageRequest.of(page, size);
 

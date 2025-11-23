@@ -30,7 +30,6 @@ public class DataInitializer {
                 admin.setUserRole(UserRole.ADMIN);
 
                 userRepository.save(admin);
-                System.out.println("Default admin account created: " + adminEmail);
             }
         };
     }
