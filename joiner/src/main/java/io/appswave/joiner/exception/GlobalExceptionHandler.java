@@ -1,5 +1,6 @@
 package io.appswave.joiner.exception;
 
+import io.appswave.joiner.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -40,6 +41,13 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.badRequest().body(errors);
+    }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<?> handleEmailAlreadyExists(EmailAlreadyExistsException ex, Locale locale) {
+        String msg = messageSource.getMessage("user.exists", null, "Email already exists", locale);
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(ApiResponse.error(msg));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

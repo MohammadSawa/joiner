@@ -6,6 +6,7 @@ import io.appswave.joiner.dto.response.LoginResponse;
 import io.appswave.joiner.dto.response.RegisterResponse;
 import io.appswave.joiner.entity.User;
 import io.appswave.joiner.enums.UserRole;
+import io.appswave.joiner.exception.EmailAlreadyExistsException;
 import io.appswave.joiner.exception.UserNotFoundException;
 import io.appswave.joiner.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,7 +29,7 @@ public class AuthService {
 
     public RegisterResponse register(SignupRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
-            throw new RuntimeException("user.exists");
+            throw new EmailAlreadyExistsException();
         }
 
         User user = new User();
