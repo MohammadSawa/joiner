@@ -10,10 +10,6 @@ import lombok.Data;
 @Data
 public class MemberUpdateRequest {
 
-    /**
-     * If provided, must not be blank
-     * If null, field is not updated
-     */
     @NotBlank(message = "validation.firstname.required")
     private String firstName;
 
