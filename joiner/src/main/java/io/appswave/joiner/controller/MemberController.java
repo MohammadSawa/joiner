@@ -91,20 +91,13 @@ public class MemberController {
             @RequestParam(defaultValue = "false") boolean hard,
             Locale locale
     ) {
-        String message;
-        String deleteType;
-
-        if (hard) {
-            memberService.hardDelete(id);
-            message = messageSource.getMessage("member.permanently.deleted", null, "Member permanently deleted", locale);
-            deleteType = "HARD";
-        } else {
-            memberService.softDelete(id);
-            message = messageSource.getMessage("member.deleted", null, "Member deleted successfully", locale);
-            deleteType = "SOFT";
-        }
-
-        DeleteResponse deleteResponse = new DeleteResponse(message, deleteType, true);
+        DeleteResponse deleteResponse = memberService.delete(id, hard);
+        String message = messageSource.getMessage(
+                hard ? "member.permanently.deleted" : "member.deleted",
+                null,
+                hard ? "Member permanently deleted" : "Member deleted successfully",
+                locale
+        );
         return ResponseEntity.ok(ApiResponse.success(message, deleteResponse));
     }
 }

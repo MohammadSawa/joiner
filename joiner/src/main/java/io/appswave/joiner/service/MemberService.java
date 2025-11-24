@@ -2,6 +2,7 @@ package io.appswave.joiner.service;
 
 import io.appswave.joiner.dto.request.MemberRequest;
 import io.appswave.joiner.dto.request.MemberUpdateRequest;
+import io.appswave.joiner.dto.response.DeleteResponse;
 import io.appswave.joiner.dto.response.MemberResponse;
 import io.appswave.joiner.entity.Member;
 import io.appswave.joiner.entity.User;
@@ -92,7 +93,6 @@ public class MemberService {
         return MemberMapper.toDto(member);
     }
 
-
     public Page<MemberResponse> list(int page, int size, String search) {
         assertAdmin();
 
@@ -132,6 +132,18 @@ public class MemberService {
 
         Member updated = memberRepository.save(member);
         return MemberMapper.toDto(updated);
+    }
+
+    public DeleteResponse delete(UUID id, boolean hard) {
+        Member member = getEntity(id);
+
+        if (hard) {
+            hardDelete(id);
+            return new DeleteResponse("Member permanently deleted", "HARD", true);
+        } else {
+            softDelete(id);
+            return new DeleteResponse("Member deleted successfully", "SOFT", true);
+        }
     }
 
     public void softDelete(UUID id) {
